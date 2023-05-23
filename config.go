@@ -7,7 +7,8 @@ import (
 )
 
 type Config struct {
-	Port string `mapstructure:"port"`
+	Port   string `mapstructure:"port"`
+	DBName string `mapstructure:"dbName"`
 }
 
 var AppConfig *Config

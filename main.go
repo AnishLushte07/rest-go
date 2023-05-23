@@ -5,12 +5,16 @@ import (
 	"log"
 	"net/http"
 	"rest-go/controllers"
+	"rest-go/db"
 
 	"github.com/gorilla/mux"
 )
 
 func main() {
 	LoadConfig()
+
+	db.Connect(AppConfig.DBName)
+	db.Migrate()
 
 	router := mux.NewRouter().StrictSlash(true)
 

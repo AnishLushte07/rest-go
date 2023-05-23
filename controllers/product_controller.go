@@ -3,8 +3,8 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"rest-go/db"
 	"rest-go/entities"
-	"rest-go/faker"
 	"strconv"
 
 	"github.com/gorilla/mux"
@@ -12,18 +12,20 @@ import (
 
 func CreateProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var product entities.Product
+	product := &entities.Product{}
 
 	json.NewDecoder(r.Body).Decode(&product)
-	data := faker.AddProduct(&product)
-
-	json.NewEncoder(w).Encode(&data)
+	// data := faker.AddProduct(&product)
+	db.DbInstance.Create(&product)
+	json.NewEncoder(w).Encode(&product)
 }
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	data := faker.Products
-	json.NewEncoder(w).Encode(&data)
+	// data := faker.Products
+	products := &[]entities.Product{}
+	db.DbInstance.Find(&products)
+	json.NewEncoder(w).Encode(&products)
 }
 
 func DeleteProduct(w http.ResponseWriter, r *http.Request) {
@@ -35,10 +37,8 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 
 	uProductId := uint(productId)
 
-	error := faker.DeleteProduct(uProductId)
-
-	if error != nil {
-		// w.Write([]byte(error.Error()))
-		http.Error(w, error.Error(), http.StatusBadRequest)
-	}
+	// error := faker.DeleteProduct(uProductId)
+	// not checking for product missing condition
+	var product entities.Product
+	db.DbInstance.Delete(&product, uProductId)
 }

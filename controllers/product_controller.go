@@ -30,7 +30,7 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	productId, err := strconv.Atoi(mux.Vars(r)["id"])
 
 	if err != nil {
-		w.Write([]byte(err.Error()))
+		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
 	uProductId := uint(productId)
@@ -38,6 +38,7 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	error := faker.DeleteProduct(uProductId)
 
 	if error != nil {
-		w.Write([]byte(error.Error()))
+		// w.Write([]byte(error.Error()))
+		http.Error(w, error.Error(), http.StatusBadRequest)
 	}
 }
